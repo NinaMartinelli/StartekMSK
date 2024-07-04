@@ -1,4 +1,4 @@
-import telebot # type: ignore
+import telebot
 from telebot import types
 
 # Conexión con nuestro BOT
