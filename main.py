@@ -1,9 +1,17 @@
+import os
 import telebot
 from telebot import types
+from flask import Flask
 
 # Conexión con nuestro BOT
-TOKEN = '6782919923:AAGyiXLvnUEnBwPUye8TvQDQbi1qqoBkEX0'
+TOKEN = 'your_telegram_bot_token'
 bot = telebot.TeleBot(TOKEN)
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "Hello, World!"
 
 # Manejador del comando /start
 @bot.message_handler(commands=['start'])
@@ -58,6 +66,10 @@ def callback_query(call):
         send_welcome(call.message)
 
 if __name__ == "__main__":
-    bot.polling(none_stop=True)
+    # Render define el puerto en la variable de entorno PORT
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+
+
     
 
