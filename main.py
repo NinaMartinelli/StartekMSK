@@ -2,6 +2,7 @@ import os
 import telebot
 from telebot import types
 from flask import Flask
+from waitress import serve  # Importa Waitress
 
 # Conexión con nuestro BOT
 TOKEN = 'your_telegram_bot_token'
@@ -68,9 +69,4 @@ def callback_query(call):
 if __name__ == "__main__":
     # Render define el puerto en la variable de entorno PORT
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-
-
-
-    
-
+    serve(app, host='0.0.0.0', port=port)  # Usa Waitress para servir tu aplicación
