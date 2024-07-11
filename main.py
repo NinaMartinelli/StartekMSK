@@ -1,11 +1,15 @@
+import os
 import telebot
 from telebot import types
 import requests
 import time
 
-# Conexión con nuestro BOT
-TOKEN = 'TU_TOKEN_AQUÍ'
+# Obtén el token del bot desde las variables de entorno
+TOKEN = os.getenv('TOKEN')
+if TOKEN is None:
+    raise ValueError("No se ha encontrado el token del bot en las variables de entorno.")
 
+# Inicializa el bot
 bot = telebot.TeleBot(TOKEN)
 
 # Manejador del comando /start
@@ -86,3 +90,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Ha ocurrido un error inesperado: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+
