@@ -4,7 +4,7 @@ import requests
 import time
 
 # Conexión con nuestro BOT
-TOKEN = '6782919923:AAGyiXLvnUEnBwPUye8TvQDQbi1qqoBkEX0'
+TOKEN = 'TU_TOKEN_AQUÍ'
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -20,7 +20,7 @@ def send_welcome(message):
     btn6 = types.KeyboardButton('Volver atrás')
     markup.add(btn1, btn2, btn3, btn4, btn5, btn6)
     
-    bot.send_message(message.chat.id, "Bienvenido! Selecciona una opción:", reply_markup=markup)
+    bot.send_message(message.chat.id, "¡Bienvenido! Selecciona una opción:", reply_markup=markup)
 
 # Manejador del comando /help
 @bot.message_handler(commands=['help'])
@@ -47,7 +47,7 @@ def handle_message(message):
 
 def handle_consultas(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
-    btn_si = types.InlineKeyboardButton('Si', callback_data='Consultas_si')
+    btn_si = types.InlineKeyboardButton('Sí', callback_data='Consultas_si')
     btn_no = types.InlineKeyboardButton('No', callback_data='Consultas_no')
     btn_back = types.InlineKeyboardButton('Volver atrás', callback_data='back')
     markup.add(btn_si, btn_no, btn_back)
@@ -80,10 +80,9 @@ if __name__ == "__main__":
         except requests.exceptions.ReadTimeout:
             print("ReadTimeout: La solicitud a la API de Telegram ha superado el tiempo de espera.")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+        except requests.exceptions.ConnectionError:
+            print("ConnectionError: Problema de conexión.")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
         except Exception as e:
             print(f"Ha ocurrido un error inesperado: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-
-
-
-
