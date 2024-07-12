@@ -11,3 +11,4 @@ services:
       - key: TOKEN
         value: 6782919923:AAGyiXLvnUEnBwPUye8TvQDQbi1qqoBkEX0
     pythonVersion: 3.8
+

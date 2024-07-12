@@ -90,4 +90,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Ha ocurrido un error inesperado: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-
