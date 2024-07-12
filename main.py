@@ -4,8 +4,12 @@ from telebot import types
 import requests
 import time
 
+# Establece el token directamente para pruebas
+os.environ['TOKEN'] = "6782919923:AAGE4n20pIXTb21cXYAI-oH13K0si6usKEA"
+
 # Obtén el token del bot desde las variables de entorno
 TOKEN = os.getenv('TOKEN')
+print(f"TOKEN: {TOKEN}")  # Línea de depuración
 if TOKEN is None:
     raise ValueError("No se ha encontrado el token del bot en las variables de entorno.")
 
@@ -90,3 +94,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Ha ocurrido un error inesperado: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+        
