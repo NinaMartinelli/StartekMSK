@@ -16,9 +16,38 @@ if TOKEN is None:
 # Inicializa el bot
 bot = telebot.TeleBot(TOKEN)
 
+# Función para preguntar cómo se siente el usuario
+def ask_how_are_you(message):
+    markup = types.ReplyKeyboardMarkup(row_width=3, one_time_keyboard=True)
+    joy = types.KeyboardButton('😃 Alegría')
+    sadness = types.KeyboardButton('😢 Tristeza')
+    neutral = types.KeyboardButton('😐 Neutro')
+    fear = types.KeyboardButton('😱 Miedo')
+    anger = types.KeyboardButton('😡 Enojo')
+    markup.add(joy, sadness, neutral, fear, anger)
+    bot.send_message(message.chat.id, "¿Cómo te sientes hoy?", reply_markup=markup)
+
 # Manejador del comando /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
+    ask_how_are_you(message)
+
+# Manejador de las respuestas a la pregunta "¿Cómo te sientes hoy?"
+@bot.message_handler(func=lambda message: message.text in ['😃 Alegría', '😢 Tristeza', '😐 Neutro', '😱 Miedo', '😡 Enojo'])
+def handle_feelings(message):
+    feeling_responses = {
+        '😃 Alegría': '¡Me alegra saber que te sientes feliz!',
+        '😢 Tristeza': 'Lo siento, espero que te sientas mejor pronto.',
+        '😐 Neutro': 'Entiendo, todos tenemos días neutros.',
+        '😱 Miedo': 'Debe ser difícil sentir miedo. Estoy aquí para ayudarte.',
+        '😡 Enojo': 'Lamento que te sientas enojado. ¿Hay algo que pueda hacer para ayudarte?'
+    }
+    response = feeling_responses.get(message.text, "Gracias por compartir cómo te sientes.")
+    bot.send_message(message.chat.id, response)
+    # Luego de recibir la respuesta, mostramos el menú principal
+    show_main_menu(message)
+
+def show_main_menu(message):
     markup = types.ReplyKeyboardMarkup(row_width=2)
     btn1 = types.KeyboardButton('Tengo una consulta')
     btn2 = types.KeyboardButton('Gestionar mis métricas')
@@ -27,7 +56,6 @@ def send_welcome(message):
     btn5 = types.KeyboardButton('Quiero postular mi llamada')
     btn6 = types.KeyboardButton('Volver atrás')
     markup.add(btn1, btn2, btn3, btn4, btn5, btn6)
-    
     bot.send_message(message.chat.id, "¡Bienvenido! Selecciona una opción:", reply_markup=markup)
 
 # Manejador de texto para cambiar el menú cuando se presiona 'Tengo una consulta'
@@ -38,7 +66,7 @@ def handle_consultas(message):
     btn2 = types.KeyboardButton('Pagos-Facturación')
     btn3 = types.KeyboardButton('Imei')
     btn4 = types.KeyboardButton('Analizar caso')
-    btn5 = types.KeyboardButton('Consulta 5')
+    btn5 = types.KeyboardButton('Reconectar línea')
     btn6 = types.KeyboardButton('Consulta 6')
     btn_back = types.KeyboardButton('Atrás')
     markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn_back)
@@ -71,7 +99,7 @@ def handle_horarios_break(message):
 # Manejador para el botón 'Atrás' que vuelve al menú principal
 @bot.message_handler(func=lambda message: message.text == 'Atrás')
 def go_back(message):
-    send_welcome(message)
+    show_main_menu(message)
 
 # Manejador de consultas (Inline Keyboard)
 @bot.callback_query_handler(func=lambda call: True)
@@ -85,7 +113,7 @@ def callback_query(call):
             bot.answer_callback_query(call.id, f'Has seleccionado la Consulta {consulta_num}')
             bot.send_message(call.message.chat.id, f'Has seleccionado la Consulta {consulta_num}. Aquí está la información correspondiente.')
     elif call.data == 'back':
-        send_welcome(call.message)
+        show_main_menu(call.message)
     else:
         bot.answer_callback_query(call.id, "Opción no reconocida.")
         bot.send_message(call.message.chat.id, "Opción no reconocida. Por favor, intenta de nuevo.")
@@ -110,4 +138,3 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Ha ocurrido un error inesperado: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-
