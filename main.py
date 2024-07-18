@@ -37,7 +37,7 @@ def handle_consultas(message):
     btn1 = types.KeyboardButton('Ajustes')
     btn2 = types.KeyboardButton('Pagos-Facturación')
     btn3 = types.KeyboardButton('Imei')
-    btn4 = types.KeyboardButton('Consulta 4')
+    btn4 = types.KeyboardButton('Analizar caso')
     btn5 = types.KeyboardButton('Consulta 5')
     btn6 = types.KeyboardButton('Consulta 6')
     btn_back = types.KeyboardButton('Atrás')
@@ -45,13 +45,14 @@ def handle_consultas(message):
     
     bot.send_message(message.chat.id, "Selecciona tu consulta:", reply_markup=markup)
 
-# Manejador de texto para mostrar el botón "Cambios de horarios" cuando se presiona 'Accesos directos'
+# Manejador de texto para mostrar el botón "Cambios de horarios" y "Horarios de Break" cuando se presiona 'Accesos directos'
 @bot.message_handler(func=lambda message: message.text == 'Accesos directos')
 def handle_accesos_directos(message):
     markup = types.ReplyKeyboardMarkup(row_width=1)
     btn_cambios_horarios = types.KeyboardButton('Cambios de horarios')
+    btn_horarios_break = types.KeyboardButton('Horarios de Break')
     btn_back = types.KeyboardButton('Atrás')
-    markup.add(btn_cambios_horarios, btn_back)
+    markup.add(btn_cambios_horarios, btn_horarios_break, btn_back)
     
     bot.send_message(message.chat.id, "Selecciona una opción:", reply_markup=markup)
 
@@ -60,6 +61,12 @@ def handle_accesos_directos(message):
 def handle_cambios_horarios(message):
     link = "https://startek-my.sharepoint.com/:x:/r/personal/romina_lima_startek_com/_layouts/15/Doc.aspx?sourcedoc=%7B85086e59-f869-44e3-ba0a-a44fd58c903c%7D&action=editnew&wdsle=0&wdOrigin=OUTLOOK-METAOS.FILEBROWSER.FILES-FOLDER"
     bot.send_message(message.chat.id, f"Cambios de horarios: [Haz clic aquí]({link})", parse_mode="Markdown")
+
+# Manejador de texto para mostrar el enlace cuando se presiona 'Horarios de Break'
+@bot.message_handler(func=lambda message: message.text == 'Horarios de Break')
+def handle_horarios_break(message):
+    link = "https://startek-my.sharepoint.com/:x:/p/emilse_gonzalez/ES71DlOHk7tBv7x8IZGZZSIB31kQnDPZiSvU2G50aYzQvg"
+    bot.send_message(message.chat.id, f"Horarios de Break: [Haz clic aquí]({link})", parse_mode="Markdown")
 
 # Manejador para el botón 'Atrás' que vuelve al menú principal
 @bot.message_handler(func=lambda message: message.text == 'Atrás')
@@ -91,15 +98,16 @@ signal.signal(signal.SIGINT, shutdown_bot)
 signal.signal(signal.SIGTERM, shutdown_bot)
 
 if __name__ == "__main__":
-    try:
-        bot.polling(none_stop=True, timeout=40, long_polling_timeout=20)
-    except requests.exceptions.ReadTimeout:
-        print("ReadTimeout: La solicitud a la API de Telegram ha superado el tiempo de espera.")
-        time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-    except requests.exceptions.ConnectionError:
-        print("ConnectionError: Problema de conexión.")
-        time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-    except Exception as e:
-        print(f"Ha ocurrido un error inesperado: {e}")
-        time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-        
+    while True:
+        try:
+            bot.polling(none_stop=True, timeout=40, long_polling_timeout=20)
+        except requests.exceptions.ReadTimeout:
+            print("ReadTimeout: La solicitud a la API de Telegram ha superado el tiempo de espera.")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+        except requests.exceptions.ConnectionError:
+            print("ConnectionError: Problema de conexión.")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+        except Exception as e:
+            print(f"Ha ocurrido un error inesperado: {e}")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+
