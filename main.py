@@ -33,14 +33,14 @@ def send_welcome(message):
     ask_how_are_you(message)
 
 # Manejador de las respuestas a la pregunta "¿Cómo te sientes hoy?"
-@bot.message_handler(func=lambda message: message.text in ['😃 Alegre', '😢 Triste', '😐 Neutro', '😱 Miedo', '😡 Enojo'])
+@bot.message_handler(func=lambda message: message.text in ['😃', '😢', '😐', '😱', '😡'])
 def handle_feelings(message):
     feeling_responses = {
-        '😃 Alegre': '¡Me alegra saber que te sientes feliz!',
-        '😢 Triste': 'Lo siento, espero que te sientas mejor pronto.',
-        '😐 Neutro': 'Entiendo, todos tenemos días neutrales. ¡Vamos a intentar un cambio de actitud!',
-        '😱 Miedo': 'Debe ser difícil sentir miedo, pero confía en tus acciones y tendrás buen desempeño.',
-        '😡 Enojo': 'Intenta cambiar esa energía con pensamientos positivos y buscando la solución o alternativa que tengas para brindar.'
+        '😃': '¡Me alegra saber que te sientes feliz!',
+        '😢': 'Lo siento, espero que te sientas mejor pronto.',
+        '😐': 'Entiendo, todos tenemos días neutrales. ¡Vamos a intentar un cambio de actitud!',
+        '😱': 'Debe ser difícil sentir miedo, pero confía en tus acciones y tendrás buen desempeño.',
+        '😡': 'Intenta cambiar esa energía con pensamientos positivos y buscando la solución o alternativa que tengas para brindar.'
     }
     response = feeling_responses.get(message.text, "Gracias por compartir cómo te sientes.")
     bot.send_message(message.chat.id, response)
