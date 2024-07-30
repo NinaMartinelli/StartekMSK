@@ -19,9 +19,9 @@ bot = telebot.TeleBot(TOKEN)
 # Función para preguntar cómo se siente el usuario
 def ask_how_are_you(message):
     markup = types.ReplyKeyboardMarkup(row_width=3, one_time_keyboard=True)
-    joy = types.KeyboardButton('😃 Alegría')
-    sadness = types.KeyboardButton('😢 Tristeza')
-    neutral = types.KeyboardButton('😐 Neutro')
+    joy = types.KeyboardButton('😃 Alegre')
+    sadness = types.KeyboardButton('😢 Toy triste')
+    neutral = types.KeyboardButton('😐 Sin nada')
     fear = types.KeyboardButton('😱 Miedo')
     anger = types.KeyboardButton('😡 Enojo')
     markup.add(joy, sadness, neutral, fear, anger)
@@ -38,9 +38,9 @@ def handle_feelings(message):
     feeling_responses = {
         '😃 Alegría': '¡Me alegra saber que te sientes feliz!',
         '😢 Tristeza': 'Lo siento, espero que te sientas mejor pronto.',
-        '😐 Neutro': 'Entiendo, todos tenemos días neutros.',
-        '😱 Miedo': 'Debe ser difícil sentir miedo. Estoy aquí para ayudarte.',
-        '😡 Enojo': 'Lamento que te sientas enojado. ¿Hay algo que pueda hacer para ayudarte?'
+        '😐 Neutro': 'Entiendo, todos tenemos días que no sentimos.Vamos a intentar un cambio de Actitud!',
+        '😱 Miedo': 'Debe ser difícil sentir miedo. Pero confia en tus acciones y tendras buen desempeño',
+        '😡 Enojo': 'Intenta cambiar esa energía con pensamientos positivos y buscando la solucion o alternativa que tengas para brindar'
     }
     response = feeling_responses.get(message.text, "Gracias por compartir cómo te sientes.")
     bot.send_message(message.chat.id, response)
@@ -61,17 +61,32 @@ def show_main_menu(message):
 # Manejador de texto para cambiar el menú cuando se presiona 'Tengo una consulta'
 @bot.message_handler(func=lambda message: message.text == 'Tengo una consulta')
 def handle_consultas(message):
-    markup = types.ReplyKeyboardMarkup(row_width=2)
-    btn1 = types.KeyboardButton('Ajustes')
-    btn2 = types.KeyboardButton('Pagos-Facturación')
-    btn3 = types.KeyboardButton('Imei')
-    btn4 = types.KeyboardButton('Analizar caso')
-    btn5 = types.KeyboardButton('Reconectar línea')
-    btn6 = types.KeyboardButton('Consulta 6')
+    markup = types.ReplyKeyboardMarkup(row_width=1)
+    btn1 = types.KeyboardButton('¿Cómo cambio mi contraseña?')
+    btn2 = types.KeyboardButton('¿Cuál es el horario de atención?')
+    btn3 = types.KeyboardButton('¿Cómo puedo consultar mi saldo?')
+    btn4 = types.KeyboardButton('¿Cómo solicitar soporte técnico?')
     btn_back = types.KeyboardButton('Atrás')
-    markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn_back)
+    markup.add(btn1, btn2, btn3, btn4, btn_back)
     
     bot.send_message(message.chat.id, "Selecciona tu consulta:", reply_markup=markup)
+
+# Manejador de las consultas específicas
+@bot.message_handler(func=lambda message: message.text in [
+    '¿Cómo cambio mi contraseña?',
+    '¿Cuál es el horario de atención?',
+    '¿Cómo puedo consultar mi saldo?',
+    '¿Cómo solicitar soporte técnico?'
+])
+def handle_specific_consultas(message):
+    responses = {
+        '¿Cómo cambio mi contraseña?': 'Para cambiar tu contraseña, ve a Configuración > Seguridad > Cambiar Contraseña.',
+        '¿Cuál es el horario de atención?': 'El horario de atención es de lunes a viernes, de 9 AM a 6 PM.',
+        '¿Cómo puedo consultar mi saldo?': 'Puedes consultar tu saldo enviando un mensaje con la palabra "SALDO" al 12345.',
+        '¿Cómo solicitar soporte técnico?': 'Para solicitar soporte técnico, llama al 0800-123-4567 o envía un correo a soporte@empresa.com.'
+    }
+    response = responses.get(message.text, "Consulta no reconocida.")
+    bot.send_message(message.chat.id, response)
 
 # Manejador de texto para mostrar el botón "Cambios de horarios" y "Horarios de Break" cuando se presiona 'Accesos directos'
 @bot.message_handler(func=lambda message: message.text == 'Accesos directos')
