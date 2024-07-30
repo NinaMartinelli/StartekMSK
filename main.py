@@ -15,22 +15,40 @@ if TOKEN is None:
 
 # Inicializa el bot
 bot = telebot.TeleBot(TOKEN)
+# URL de la API para obtener el permiso
+PERMISSION_API_URL = "https://apimocha.com/nominamsk/nomina"
+
+# Función para solicitar permiso
+def request_permission():
+    try:
+        response = requests.get(PERMISSION_API_URL)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("permitido", False)
+        else:
+            return False
+    except requests.RequestException as e:
+        print(f"Error al conectar con la API: {e}")
+        return False
 
 # Función para preguntar cómo se siente el usuario
 def ask_how_are_you(message):
     markup = types.ReplyKeyboardMarkup(row_width=3, one_time_keyboard=True)
-    joy = types.KeyboardButton('😃 Alegre')
-    sadness = types.KeyboardButton('😢 Triste')
-    neutral = types.KeyboardButton('😐 Neutro')
-    fear = types.KeyboardButton('😱 Miedo')
-    anger = types.KeyboardButton('😡 Enojo')
+    joy = types.KeyboardButton('😃')
+    sadness = types.KeyboardButton('😢')
+    neutral = types.KeyboardButton('😐')
+    fear = types.KeyboardButton('😱')
+    anger = types.KeyboardButton('😡')
     markup.add(joy, sadness, neutral, fear, anger)
     bot.send_message(message.chat.id, "¿Cómo te sientes hoy?", reply_markup=markup)
 
 # Manejador del comando /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    ask_how_are_you(message)
+    if request_permission():
+        ask_how_are_you(message)
+    else:
+        bot.send_message(message.chat.id, "No tienes permiso para usar este bot.")
 
 # Manejador de las respuestas a la pregunta "¿Cómo te sientes hoy?"
 @bot.message_handler(func=lambda message: message.text in ['😃', '😢', '😐', '😱', '😡'])
