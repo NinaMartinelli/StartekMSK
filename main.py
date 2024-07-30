@@ -141,4 +141,21 @@ def callback_query(call):
 
 def shutdown_bot(signum, frame):
     bot.stop_polling()
-    exit
+    exit(0)
+
+signal.signal(signal.SIGINT, shutdown_bot)
+signal.signal(signal.SIGTERM, shutdown_bot)
+
+if __name__ == "__main__":
+    while True:
+        try:
+            bot.polling(none_stop=True, timeout=40, long_polling_timeout=20)
+        except requests.exceptions.ReadTimeout:
+            print("ReadTimeout: La solicitud a la API de Telegram ha superado el tiempo de espera.")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+        except requests.exceptions.ConnectionError:
+            print("ConnectionError: Problema de conexión.")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
+        except Exception as e:
+            print(f"Ha ocurrido un error inesperado: {e}")
+            time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
