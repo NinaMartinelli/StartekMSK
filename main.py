@@ -62,8 +62,8 @@ def show_main_menu(message):
 @bot.message_handler(func=lambda message: message.text == 'Tengo una consulta')
 def handle_consultas(message):
     markup = types.ReplyKeyboardMarkup(row_width=1)
-    btn1 = types.KeyboardButton('¿Cómo cambio mi contraseña?')
-    btn2 = types.KeyboardButton('¿Cuál es el horario de atención?')
+    btn1 = types.KeyboardButton('¿Cómo cargo un ajuste?')
+    btn2 = types.KeyboardButton('¿Como cargo un ajuste de una línea cancelada?')
     btn3 = types.KeyboardButton('¿Cómo puedo consultar mi saldo?')
     btn4 = types.KeyboardButton('¿Cómo solicitar soporte técnico?')
     btn_back = types.KeyboardButton('Atrás')
@@ -73,17 +73,23 @@ def handle_consultas(message):
 
 # Manejador de las consultas específicas
 @bot.message_handler(func=lambda message: message.text in [
-    '¿Cómo cambio mi contraseña?',
-    '¿Cuál es el horario de atención?',
-    '¿Cómo puedo consultar mi saldo?',
-    '¿Cómo solicitar soporte técnico?'
+    '¿Cómo cargo un ajuste?',
+    '¿Cómo cargo un ajuste de una línea cancelada?',
+    '¿Cómo cargo ajuste de una línea cancelada si no me sale el NIM en pec o no tiene otra cuenta activa?',
+    'Cambio de sim - FRAUDE'
 ])
 def handle_specific_consultas(message):
     responses = {
-        '¿Cómo cambio mi contraseña?': 'Para cambiar tu contraseña, ve a Configuración > Seguridad > Cambiar Contraseña.',
-        '¿Cuál es el horario de atención?': 'El horario de atención es de lunes a viernes, de 9 AM a 6 PM.',
-        '¿Cómo puedo consultar mi saldo?': 'Puedes consultar tu saldo enviando un mensaje con la palabra "SALDO" al 12345.',
-        '¿Cómo solicitar soporte técnico?': 'Para solicitar soporte técnico, llama al 0800-123-4567 o envía un correo a soporte@empresa.com.'
+        '¿Cómo cargo un ajuste?': 'Todos los ajustes se cargan por PEC, tenés que validar el motivo que genera el ajuste para determinar si corresponde o no. 
+Podes ver motivos en https://claroaup.sharepoint.com/sites/ClaroPedia2/SitePages/Instructivos/Ajustes---Multiskill.aspx',
+        '¿Cuál cargo un ajuste de linea CANCELADA?': 'Siempre deben cargarse a través de PEC utilizando el número de cuenta o alguna línea activa o cancelada con número no borrado. Recordar aclarar dentro del pedido los datos de la cuenta a ajustar.',
+        '¿Cómo cargo ajuste de una línea cancelada si no me sale el NIM en pec o no tiene otra cuenta activa?': 'Lo debes cargar a través de SMAX- SOLICITUDES CALL CENTER - LOYALTY.',
+        'Cambio de sim - FRAUDE': 'Cliente inicia la conversación diciendo que se quedó sin línea de golpe / o recibió un SMS o mail informando que se hizo un cambio de SIM y desconoce. SMS: “Pediste un nuevo chip Claro para tu línea y será entregado en breve. Si vos no lo solicitaste contáctanos en claro.com.ar/chatonline” y no solicitó un cambio de sim-
+        Informale que por su seguridad vas a suspender la línea
+        VALIDA DNI
+        SUSPENDE X ROBO
+        CARGA TICKLER DESIM
+        GESTIONA ENVIO CHIP'
     }
     response = responses.get(message.text, "Consulta no reconocida.")
     bot.send_message(message.chat.id, response)
