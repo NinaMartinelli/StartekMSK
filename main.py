@@ -4,6 +4,10 @@ from telebot import types
 import requests
 import time
 import signal
+import logging
+
+# Configura el logging
+logging.basicConfig(level=logging.INFO)
 
 # Establece el token directamente para pruebas
 os.environ['TOKEN'] = "6782919923:AAGE4n20pIXTb21cXYAI-oH13K0si6usKEA"
@@ -28,7 +32,7 @@ def request_permission(user_id):
         data = response.json()
         return data.get('has_permission', False)  # Asume que la API devuelve un campo 'has_permission'
     except requests.RequestException as e:
-        print(f"Error al solicitar permiso: {e}")
+        logging.error(f"Error al solicitar permiso: {e}")
         return False
 
 # Función para preguntar cómo se siente el usuario
@@ -158,26 +162,27 @@ def callback_query(call):
         bot.send_message(call.message.chat.id, "Opción no reconocida. Por favor, intenta de nuevo.")
 
 def shutdown_bot(signum, frame):
+    logging.info("Deteniendo el bot...")
     bot.stop_polling()
     exit(0)
 
 signal.signal(signal.SIGINT, shutdown_bot)
 signal.signal(signal.SIGTERM, shutdown_bot)
+
 if __name__ == "__main__":
     while True:
         try:
             bot.polling(none_stop=True, timeout=40, long_polling_timeout=20)
         except requests.exceptions.ReadTimeout:
-            print("ReadTimeout: La solicitud a la API de Telegram ha superado el tiempo de espera.")
+            logging.error("ReadTimeout: La solicitud a la API de Telegram ha superado el tiempo de espera.")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
         except requests.exceptions.ConnectionError:
-            print("ConnectionError: Problema de conexión.")
+            logging.error("ConnectionError: Problema de conexión.")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
         except telebot.apihelper.ApiTelegramException as e:
-            print(f"Error de API Telegram: {e}")
+            logging.error(f"Error de API Telegram: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
         except Exception as e:
-            print(f"Ha ocurrido un error inesperado: {e}")
+            logging.error(f"Ha ocurrido un error inesperado: {e}")
             time.sleep(15)  # Espera 15 segundos antes de intentar nuevamente
-
 
