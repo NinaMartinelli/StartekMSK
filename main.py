@@ -71,7 +71,7 @@ def handle_consultas(message):
     
     bot.send_message(message.chat.id, "Selecciona tu consulta:", reply_markup=markup)
 
-# Manejador de las consultas específicas
+# Manejador de las consultas detectadas recurrentes
 @bot.message_handler(func=lambda message: message.text in [
     '¿Cómo cargo un ajuste?',
     '¿Cómo cargo un ajuste de una línea cancelada?',
@@ -81,7 +81,7 @@ def handle_consultas(message):
 def handle_specific_consultas(message):
     responses = {
         '¿Cómo cargo un ajuste?':'Todos los ajustes se cargan por PEC, tenés que validar el motivo que genera el ajuste para determinar si corresponde o no. Podes ver motivos en https://claroaup.sharepoint.com/sites/ClaroPedia2/SitePages/Instructivos/Ajustes---Multiskill.aspx',
-        '¿Cómo cargo un ajuste de una línea cancelada?': 'Siempre deben cargarse a través de PEC utilizando el número de cuenta o alguna línea activa o cancelada con número no borrado. Recordar aclarar dentro del pedido los datos de la cuenta a ajustar.',
+        '¿Cómo cargo un ajuste de una línea cancelada?':'Siempre deben cargarse a través de PEC utilizando el número de cuenta o alguna línea activa o cancelada con número no borrado. Recordar aclarar dentro del pedido los datos de la cuenta a ajustar.',
         '¿Cómo cargo ajuste de una línea cancelada si no me sale el NIM en pec o no tiene otra cuenta activa?': 'Lo debes cargar a través de SMAX- SOLICITUDES CALL CENTER - LOYALTY.',
         'Cambio de sim - FRAUDE': """Cliente inicia la conversación diciendo que se quedó sin línea de golpe o recibió un SMS o mail informando que se hizo un cambio de SIM y desconoce.
         SMS: “Pediste un nuevo chip Claro para tu línea y será entregado en breve. Si vos no lo solicitaste contáctanos en claro.com.ar/chatonline” y no solicitó un cambio de sim.
